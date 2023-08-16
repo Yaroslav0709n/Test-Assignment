@@ -13,9 +13,15 @@
     <Time>2023-08-16T22:12:46.0697095+03:00</Time>
   </User>
   <User>
-	<Id>2</Id>
-	<UserName>PC</UserName>
-	<Message>New Message</Message>
-	<Time>2023-08-16T22:14:46.0697095+03:00</Time>
+    <Id>2</Id>
+    <UserName>PC</UserName>
+    <Message>New Message</Message>
+    <Time>2023-08-16T22:14:46.0697095+03:00</Time>
+  </User>
+  <User>
+    <Id>3</Id>
+    <UserName>KOMPUTER</UserName>
+    <Message>Test Message From User</Message>
+    <Time>2023-08-16T22:20:26.7041465+03:00</Time>
   </User>
 </ArrayOfUser>
