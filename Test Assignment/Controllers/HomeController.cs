@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Xml.Serialization;
-using Test_Assignment.Context;
 using Test_Assignment.Models;
 
 namespace Test_Assignment.Controllers

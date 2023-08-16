@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Test_Assignment.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +8,6 @@ var configuration = new ConfigurationBuilder()
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
