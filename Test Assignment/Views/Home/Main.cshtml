@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-4">
+            <textarea id="message" class="form-control mb-2" placeholder="Message" aria-label="Message"></textarea>
+            <button type="button" id="saveBtn" class="btn btn-primary">Add message</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <h4>@ViewBag.Username messages</h4>
+            <div id="messageList1" class="table-container">
+                <table class="table message-list-table">
+                    <thead class="font-weight-bold">
+                        <tr>
+                            <th>ID</th>
+                            <th>User name</th>
+                            <th>Message</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messageTableBody1"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6 mt-5">
+            <h4>Users messages</h4>
+            <div id="messageList2" class="table-container">
+                <table class="table message-list-table">
+                    <thead class="font-weight-bold">
+                        <tr>
+                            <th>ID</th>
+                            <th>User name</th>
+                            <th>Message</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messageTableBody2"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#saveBtn').click(function () {
+            var message = $('#message').val();
+
+            $.post('/Home/Message', { message: message }, function (data) {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                }
+            });
+        });
+
+        loadAllMessages(); 
+        loadCurrentUserMessages()
+
+        function loadCurrentUserMessages() {
+            $.ajax({
+                url: '/Home/GetCurrentUserMessages',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var tableBody = $('#messageTableBody1');
+                    tableBody.empty();
+
+                    $.each(data, function (index, message) {
+                        var row = $('<tr>');
+                        row.append('<td>' + (index + 1) + '</td>');
+                        row.append('<td  class="name-collumn">' + message.userName + '</td>');
+                        row.append('<td  class="message-collumn">' + message.message + '</td>');
+                        row.append('<td>' + (new Date(message.time)).toLocaleString() + '</td>');
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    console.log('Error loading data.');
+                }
+            });
+        }
+
+        function loadAllMessages() {
+            $.ajax({
+                url: '/Home/GetAllUsersMessages', 
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var tableBody = $('#messageTableBody2');
+                    tableBody.empty(); 
+
+                    $.each(data, function (index, message) {
+                        var row = $('<tr>');
+                        row.append('<td>' + (index + 1) + '</td>');
+                        row.append('<td  class="name-collumn">' + message.userName + '</td>');
+                        row.append('<td  class="message-collumn">' + message.message + '</td>');
+                        row.append('<td>' + (new Date(message.time)).toLocaleString() + '</td>');
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    console.log('Error loading data.');
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User>
+    <Id>0</Id>
+    <UserName>KOMPUTER</UserName>
+    <Message>It is test assignment</Message>
+    <Time>2023-08-16T21:52:03.0817044+03:00</Time>
+  </User>
+  <User>
+    <Id>1</Id>
+    <UserName>KOMPUTER</UserName>
+    <Message>Hello World!</Message>
+    <Time>2023-08-16T22:12:46.0697095+03:00</Time>
+  </User>
+	<User>
+		<Id>2</Id>
+		<UserName>PC</UserName>
+		<Message>New Message</Message>
+		<Time>2023-08-16T22:14:46.0697095+03:00</Time>
+	</User>
+</ArrayOfUser>

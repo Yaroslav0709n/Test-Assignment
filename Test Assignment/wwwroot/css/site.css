@@ -1,0 +1,51 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+.table-container {
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.message-list-table {
+    table-layout: fixed;
+    width: 500px;
+    font-size:14px;
+}
+    .message-list-table th:first-child,
+    .message-list-table td:first-child {
+        padding-left: 0;
+        padding-right: 0;
+    }
+.message-collumn {
+  width: 200px;
+  word-wrap: break-word;
+}
+.name-collumn {
+    width: 100px;
+    word-wrap: break-word;
+}
+.id-collumn {
+    width:10px;
+    word-wrap: break-word;
+}
