@@ -1,115 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Test_Assignment.Models;
+using Microsoft.EntityFrameworkCore;
+using Test_Assignment.Common;
+using Test_Assignment.Context;
+using Test_Assignment.Services;
 
 namespace Test_Assignment.Controllers
 {
     public class HomeController : Controller
     {
-        private string filePath = @".\DbFile\usersDb.xml";
-        string currentMachineName = Environment.MachineName;
-        List<User> usersMessages;
+        private readonly TestDbContext _dbContext;
+        private readonly IUserMessageService _userMessageService;
 
-        public HomeController(ILogger<HomeController> logger)
-        { }
+        public HomeController(TestDbContext dbContext, IUserMessageService userMessageService)
+        {
+            _dbContext = dbContext;
+            _userMessageService = userMessageService;
+        }
 
         public IActionResult Main()
         {
-            ViewBag.Username = currentMachineName;
+            ViewBag.Username = CommonOptions.currentMachineName;
             return View();
         }
 
-        public IActionResult GetAllUsersMessages()
+        async public Task<IActionResult> GetAllUsersMessages()
         {
-            Thread.Sleep(10);
-            return Json(DeserializationListOfUsers(usersMessages, filePath));
+            try
+            {
+                return Json(await _userMessageService.GetAllUsersMessagesAsync());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
-        public IActionResult GetCurrentUserMessages()
+        async public Task<IActionResult> GetCurrentUserMessages()
         {
-            if (System.IO.File.Exists(filePath))
+            try
             {
-                XmlSerializer Serializer = new XmlSerializer(typeof(List<User>));
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    usersMessages = (List<User>)Serializer.Deserialize(reader);
-                }
+                return Json(await _userMessageService.GetCurrentUserMessagesAsync());
             }
-
-            List<User> filteredMessages = usersMessages.Where(u => u.UserName == currentMachineName).ToList();
-
-            if (filteredMessages.Count > 10)
+            catch (Exception ex)
             {
-                int index = usersMessages.FindIndex(u => u.Id == filteredMessages[0].Id);
-                if (index >= 0)
-                {
-                    usersMessages.RemoveAt(index);
-                }
-                XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
-                using (StreamWriter writer = new StreamWriter(filePath))
-                {
-                    serializer.Serialize(writer, usersMessages);
-                }
+                Console.WriteLine(ex);
+                throw; 
             }
-
-            return Json(usersMessages.Where(u => u.UserName == currentMachineName).ToList());
-        }
-        public IActionResult Message(string message)
-        {
-            List<User> usersList = DeserializationListOfUsers(usersMessages, filePath);
-
-            int newId = 0;
-            if (usersList.Count > 0)
-            {
-                newId = usersList.Max(u => u.Id) + 1;
-            }
-
-            User newUser = new User
-            {
-                Id = newId,
-                UserName = currentMachineName,
-                Message = message,
-                Time = DateTime.Now,
-            };
-
-            usersList.Add(newUser);
-
-            XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                serializer.Serialize(writer, usersList);
-            }
-
-            TempData["SuccessMessage"] = "Message successfully added";
-
-            return Json(new { success = true, message = TempData["SuccessMessage"] });
         }
 
-        static public List<User> DeserializationListOfUsers(List<User> usersMessages, string filePath)
+        async public Task<IActionResult> Message(string message)
         {
-            if (System.IO.File.Exists(filePath))
-            {
-                XmlSerializer Serializer = new XmlSerializer(typeof(List<User>));
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    usersMessages = (List<User>)Serializer.Deserialize(reader);
-                }
-            }
-
-            if (usersMessages.Count > 20)
-            {
-                usersMessages.RemoveAt(0);
-
-                XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
-                using (StreamWriter writer = new StreamWriter(filePath))
-                {
-                    serializer.Serialize(writer, usersMessages);
-                }
-            }
-
-            return usersMessages;
+            await _userMessageService.AddMessageAsync(message);
+            return Json(new { success = true, message = "Message successfully added" });
         }
     }
 }
