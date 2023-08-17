@@ -5,14 +5,13 @@
 
         $.post('/Home/Message', { message: message }, function (data) {
             if (data.success) {
+                location.reload(); 
                 alert(data.message);
-                location.reload();
             }
         });
     });
-
+    loadCurrentUserMessages();
     loadAllMessages();
-    loadCurrentUserMessages()
 
     function loadCurrentUserMessages() {
         $.ajax({
